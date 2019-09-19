@@ -112,6 +112,8 @@ import UIKit
             }
         }
     }
+    
+    @IBInspectable open var showMinMaxText: Bool = false
 
     /// The maximum distance the two selected slider values must be apart. Default is CGFloat.greatestFiniteMagnitude.
     @IBInspectable open var maxDistance: CGFloat = .greatestFiniteMagnitude {
@@ -477,15 +479,32 @@ import UIKit
         maxLabel.isHidden = hideLabels
 
         if let replacedString = delegate?.rangeSeekSlider(self, stringForMinValue: selectedMinValue) {
-            minLabel.string = replacedString
+            if self.showMinMaxText {
+                minLabel.string = "Min " + replacedString
+            } else {
+                minLabel.string = replacedString + "K"
+            }
         } else {
-            minLabel.string = numberFormatter.string(from: selectedMinValue as NSNumber)
+            if self.showMinMaxText {
+                minLabel.string = "Min " + (numberFormatter.string(from: selectedMinValue as NSNumber) ?? "0")
+            } else {
+                minLabel.string = (numberFormatter.string(from: selectedMinValue as NSNumber) ?? "0") + "K"
+            }
+            
         }
 
         if let replacedString = delegate?.rangeSeekSlider(self, stringForMaxValue: selectedMaxValue) {
-            maxLabel.string = replacedString
+            if self.showMinMaxText {
+                maxLabel.string = "Max " + replacedString
+            } else {
+                maxLabel.string = replacedString + "K"
+            }
         } else {
-            maxLabel.string = numberFormatter.string(from: selectedMaxValue as NSNumber)
+            if self.showMinMaxText {
+                maxLabel.string = "Max " + (numberFormatter.string(from: selectedMaxValue as NSNumber) ?? "\(maxValue)")
+            } else {
+                maxLabel.string = (numberFormatter.string(from: selectedMaxValue as NSNumber) ?? "\(maxValue)") + "K"
+            }
         }
 
         if let nsstring = minLabel.string as? NSString {
